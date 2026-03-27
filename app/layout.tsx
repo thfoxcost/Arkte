@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner"
 import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css"
@@ -34,7 +35,10 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+
+        <ThemeProvider>{children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
