@@ -1,56 +1,125 @@
 "use server";
-import { auth } from "@/lib/auth"
+
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 const signIn = async (email: string, password: string) => {
     try {
-
-        await auth.api.signInEmail({
+        const response = await auth.api.signInEmail({
             body: {
                 email,
                 password,
-            }
-        })
-        console.log(`${email} Signed In Succsefully !`)
-        return {
-            success: true,
-            message: "Signed In succefully !"
-        }
-
-    } catch (error) {
-        const e = error as Error
-        console.log(`${email} Signed In Failed !`)
-        return {
-            success: false,
-            message: e.message || "An unknown error occurred.",
-        }
-    }
-}
-
-const signUp = async (email: string, password: string, username: string) => {
-    try {
-        await auth.api.signUpEmail({
-            body: {
-                email,
-                password,
-                name: username,
             },
+            headers: await headers(), 
         });
-        console.log(`${username} Created An Account Succefully`)
+        
+        console.log(`${email} Signed In Successfully!`);
+        
+        
+        redirect("/dashboard");
+        
+        
         return {
             success: true,
-            message: "Signed up successfully.",
+            message: "Signed in successfully!",
         };
     } catch (error) {
+        
+        if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+            throw error; 
+        }
+        
         const e = error as Error;
-        console.log(`${username} Failed Creating An Account`)
-
+        console.log(`${email} Sign In Failed:`, e.message);
+        
         return {
             success: false,
             message: e.message || "An unknown error occurred.",
         };
     }
 };
+
+const signUp = async (email: string, password: string, username: string) => {
+    try {
+        const response = await auth.api.signUpEmail({
+            body: {
+                email,
+                password,
+                name: username,
+            },
+            headers: await headers(), 
+        });
+        
+        console.log(`${username} Created An Account Successfully`);
+        
+        
+        
+        
+        return {
+            success: true,
+            message: "Signed up successfully.",
+        };
+    } catch (error) {
+        const e = error as Error;
+        console.log(`${username} Failed Creating An Account:`, e.message);
+        
+        return {
+            success: false,
+            message: e.message || "An unknown error occurred.",
+        };
+    }
+};
+
+
+const signOut = async () => {
+    try {
+        await auth.api.signOut({
+            headers: await headers(),
+        });
+        
+        redirect("/");
+        
+        return {
+            success: true,
+            message: "Signed out successfully.",
+        };
+    } catch (error) {
+        if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+            throw error;
+        }
+        
+        const e = error as Error;
+        return {
+            success: false,
+            message: e.message || "An unknown error occurred.",
+        };
+    }
+};
+
+
+const getSession = async () => {
+    try {
+        const session = await auth.api.getSession({
+            headers: await headers(),
+        });
+        return session;
+    } catch (error) {
+        console.error("Error getting session:", error);
+        return null;
+    }
+};
+
+
+const getCurrentUser = async () => {
+    const session = await getSession();
+    return session?.user || null;
+};
+
 export {
     signIn,
     signUp,
-}
+    signOut,
+    getSession,
+    getCurrentUser,
+};

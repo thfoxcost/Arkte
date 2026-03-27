@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/sonner"
 import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import type { Metadata } from "next";
@@ -36,7 +37,10 @@ export default function RootLayout({
     >
       <body>
 
-        <ThemeProvider>{children}
+        <ThemeProvider>
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
           <Toaster />
         </ThemeProvider>
       </body>
