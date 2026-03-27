@@ -25,6 +25,15 @@ const DecorIconVariants = cva(
 type DecorIconProps = React.ComponentProps<"svg"> &
 	VariantProps<typeof DecorIconVariants>;
 
+/**
+ * Render a decorative cross SVG positioned by the `position` variant.
+ *
+ * The icon is decorative and hidden from assistive technologies.
+ *
+ * @param position - One of `"top-left" | "top-right" | "bottom-right" | "bottom-left"`; controls absolute placement. Defaults to `"top-left"`.
+ * @param className - Additional CSS classes appended to the computed classes.
+ * @returns The rendered SVG element representing a decorative cross; additional SVG props are forwarded to the element and the icon is marked `aria-hidden="true"`.
+ */
 export function DecorIcon({ position, className, ...props }: DecorIconProps) {
 	return (
 		<svg

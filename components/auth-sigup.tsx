@@ -35,6 +35,11 @@ const formSchema = z.object({
 		.max(100, "Password must be at most 100 characters."),
 });
 
+/**
+ * Render an authentication form for signing up with username, email, and password, including schema validation, per-field error display, a password visibility toggle, and submit handling that calls `signUp`, shows toast feedback, and navigates on success.
+ *
+ * @returns The component's rendered JSX element containing the sign-up form UI.
+ */
 export function AuthPage2() {
 
 

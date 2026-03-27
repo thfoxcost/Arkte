@@ -1,5 +1,11 @@
 import type React from "react";
 
+/**
+ * Renders a horizontal divider with optional centered content between two border lines.
+ *
+ * @param children - Content displayed centered within the divider (e.g., "or", icons). If omitted, the divider shows an uninterrupted line.
+ * @returns The divider element containing left and right border lines and a centered content area.
+ */
 export function AuthDivider({
 	children,
 	...props

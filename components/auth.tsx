@@ -35,6 +35,14 @@ const formSchema = z.object({
 		.max(100, "Password must be at most 100 characters."),
 });
 
+/**
+ * Render the authentication page with an email/password sign-in form.
+ *
+ * Handles form validation, submits credentials via `signIn`, displays success or error toasts,
+ * and navigates to `/dashboard` on successful sign-in.
+ *
+ * @returns The authentication page's JSX element.
+ */
 export function AuthPage() {
 	const router = useRouter();
 	async function onSubmit(data: z.infer<typeof formSchema>) {
