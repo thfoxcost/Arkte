@@ -72,30 +72,6 @@ const signUp = async (email: string, password: string, username: string) => {
 };
 
 
-const signOut = async () => {
-    try {
-        await auth.api.signOut({
-            headers: await headers(),
-        });
-        
-        redirect("/");
-        
-        return {
-            success: true,
-            message: "Signed out successfully.",
-        };
-    } catch (error) {
-        if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-            throw error;
-        }
-        
-        const e = error as Error;
-        return {
-            success: false,
-            message: e.message || "An unknown error occurred.",
-        };
-    }
-};
 
 
 const getSession = async () => {
@@ -119,7 +95,6 @@ const getCurrentUser = async () => {
 export {
     signIn,
     signUp,
-    signOut,
     getSession,
     getCurrentUser,
 };
