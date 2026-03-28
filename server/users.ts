@@ -18,8 +18,6 @@ const signIn = async (email: string, password: string) => {
         
         
         redirect("/dashboard");
-        
-        
         return {
             success: true,
             message: "Signed in successfully!",
@@ -52,10 +50,6 @@ const signUp = async (email: string, password: string, username: string) => {
         });
         
         console.log(`${username} Created An Account Successfully`);
-        
-        
-        
-        
         return {
             success: true,
             message: "Signed up successfully.",
