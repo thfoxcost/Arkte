@@ -86,9 +86,29 @@ const getCurrentUser = async () => {
     return session?.user || null;
 };
 
+
+const logout = async () => {
+  try {
+    await auth.api.signOut({
+      headers: await headers(),
+    });
+    console.log("User Signed Out Successfully");
+    redirect("/login");
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      throw error;
+    }
+    const e = error as Error;
+    console.log("Sign Out Failed:", e.message);
+  }
+};
+
+
+
 export {
     signIn,
     signUp,
     getSession,
     getCurrentUser,
+    logout,
 };
