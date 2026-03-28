@@ -17,7 +17,6 @@ async function getPack(id: string) {
     .from(packsTable)
     .where(eq(packsTable.id, id))
     .then(rows => rows[0]);
-  
   return pack;
 }
 
