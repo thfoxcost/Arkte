@@ -2,13 +2,7 @@ import React from 'react'
 
 function page() {
   return (
-    <div>
-      
-      number of docs
-      size of the docs
-       
-
-    </div>
+    <div>Trash</div>
   )
 }
 

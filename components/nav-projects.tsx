@@ -38,7 +38,7 @@ export function NavProjects({
               {item.icon}
               <span>{item.name}</span>
             </SidebarMenuButton>
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger
                 render={
                   <SidebarMenuAction
@@ -71,14 +71,16 @@ export function NavProjects({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
+            
+              ADD THIS TO THE PACKS ITEMS IN ABOVE
+            
+            
+            */}
+          
+          
           </SidebarMenuItem>
         ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontalIcon className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   )

@@ -1,126 +1,132 @@
-"use client"
-
-import * as React from "react"
-
+"use client";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import {
   Sidebar,
-  SidebarContent, SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarRail
-} from "@/components/ui/sidebar"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
-import {
+  SidebarContent,
+  SidebarHeader,
+  SidebarRail,
   SidebarFooter
-} from "@/components/ui/sidebar"
-import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, TerminalSquareIcon, BotIcon, BookOpenIcon, Settings2Icon, FrameIcon, PieChartIcon, MapIcon, PackageSearch } from "lucide-react"
-import { NavMain } from "./nav-main"
+} from "@/components/ui/sidebar";
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
+import { TeamSwitcher } from "@/components/team-switcher";
+import { NavMain } from "./nav-main";
+import { getPacks, type Pack } from "@/data/get-packs";
+import { getCurrentUser } from "@/data/get-user";
+import {
+  GalleryVerticalEndIcon,
+  AudioLinesIcon,
+  TerminalIcon,
+  PackageSearch,
+  Files,
+  Tags,
+  Settings,
+  Users
+} from "lucide-react";
 
-// This is sample data.
+// 👇 This block must be here, outside the component
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
-      logo: (
-        <GalleryVerticalEndIcon
-        />
-      ),
+      logo: <GalleryVerticalEndIcon />,
       plan: "Enterprise",
     },
     {
       name: "Acme Corp.",
-      logo: (
-        <AudioLinesIcon
-        />
-      ),
+      logo: <AudioLinesIcon />,
       plan: "Startup",
     },
     {
       name: "Evil Corp.",
-      logo: (
-        <TerminalIcon
-        />
-      ),
+      logo: <TerminalIcon />,
       plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Packs",
-      url: "#",
-      icon: (
-        <PackageSearch
-        />
-      ),
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
     },
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: (
-        <FrameIcon
-        />
-      ),
+      name: "Documents & Files",
+      url: "/dashboard/docs",
+      icon: <Files />,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: (
-        <PieChartIcon
-        />
-      ),
+      name: "Tags & Links",
+      url: "/dashboard/tags",
+      icon: <Tags />,
     },
     {
-      name: "Travel",
-      url: "#",
-      icon: (
-        <MapIcon
-        />
-      ),
+      name: "Members",
+      url: "/dashboard/members",
+      icon: <Users />,
+    },
+    {
+      name: "Settings",
+      url: "/dashboard/settings",
+      icon: <Settings />,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [packs, setPacks] = useState<Pack[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<{ id: string; email: string; name: string; avatar: string } | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [packsResult, currentUser] = await Promise.all([
+          getPacks(),
+          getCurrentUser(),
+        ]);
+
+        if (packsResult.success && packsResult.data) {
+          setPacks(packsResult.data);
+        }
+
+        if (currentUser) {
+          setUser(currentUser);
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const navMainItems = [
+    {
+      title: "Packs",
+      url: "#",
+      icon: <PackageSearch />,
+      items: loading
+        ? [{ title: "Loading...", url: "#" }]
+        : packs.length === 0
+          ? [{ title: "No packs found", url: "#" }]
+          : packs.map((pack) => ({
+            title: pack.name,
+            url: `/dashboard/packs/${pack.id}`,
+            description: pack.description,
+          })),
+    },
+  ];
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMainItems} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
+        <NavUser user={user ?? { name: "Guest", email: "", avatar: "" }} />      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
