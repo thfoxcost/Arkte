@@ -34,8 +34,8 @@ export default async function Page({
               className={cn(
                 "size-8 ring-2 ring-offset-2 ring-offset-background cursor-pointer transition-all",
                 user?.isAdmin
-                  ? "ring-blue-500/70 hover:ring-blue-500"  // admin → blue
-                  : "ring-ring"                              // normal → default ring color
+                  ? "ring-blue-500/70 hover:ring-blue-500"
+                  : "ring-ring"
               )}
             >
               {avatarSrc && (
