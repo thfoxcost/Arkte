@@ -53,7 +53,7 @@ export function AuthPage2() {
 
 		if (success) {
 			toast.success(
-				`${message as string} Please check your email for verification.`
+				`${message as string} Your Email will be Stored on Your DB`
 			);
 			router.push("/dashboard");
 		} else {
@@ -131,6 +131,9 @@ export function AuthPage2() {
 											autoComplete="off"
 										/>
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+										<FieldDescription>
+											Your email will be stored on your db
+										</FieldDescription>
 									</Field>
 								)}
 							/>

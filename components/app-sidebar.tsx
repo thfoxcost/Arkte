@@ -25,53 +25,24 @@ import {
   Users
 } from "lucide-react";
 
-// 👇 This block must be here, outside the component
 const data = {
   teams: [
-    {
-      name: "Acme Inc",
-      logo: <GalleryVerticalEndIcon />,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: <AudioLinesIcon />,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: <TerminalIcon />,
-      plan: "Free",
-    },
+    { name: "Acme Inc",   logo: <GalleryVerticalEndIcon />, plan: "Enterprise" },
+    { name: "Acme Corp.", logo: <AudioLinesIcon />,         plan: "Startup"    },
+    { name: "Evil Corp.", logo: <TerminalIcon />,           plan: "Free"       },
   ],
   projects: [
-    {
-      name: "Documents & Files",
-      url: "/dashboard/docs",
-      icon: <Files />,
-    },
-    {
-      name: "Tags & Links",
-      url: "/dashboard/tags",
-      icon: <Tags />,
-    },
-    {
-      name: "Members",
-      url: "/dashboard/members",
-      icon: <Users />,
-    },
-    {
-      name: "Settings",
-      url: "/dashboard/settings",
-      icon: <Settings />,
-    },
+    { name: "Documents & Files", url: "/dashboard/docs",     icon: <Files />    },
+    { name: "Tags & Links",      url: "/dashboard/tags",     icon: <Tags />     },
+    { name: "Members",           url: "/dashboard/members",  icon: <Users />    },
+    { name: "Settings",          url: "/dashboard/settings", icon: <Settings /> },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [packs, setPacks] = useState<Pack[]>([]);
+  const [packs, setPacks]   = useState<Pack[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<{ id: string; email: string; name: string; avatar: string } | null>(null);
+  const [user, setUser]     = useState<{ id: string; email: string; name: string; avatar: string } | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,38 +51,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           getPacks(),
           getCurrentUser(),
         ]);
-
-        if (packsResult.success && packsResult.data) {
-          setPacks(packsResult.data);
-        }
-
-        if (currentUser) {
-          setUser(currentUser);
-        }
+        if (packsResult.success && packsResult.data) setPacks(packsResult.data);
+        if (currentUser) setUser(currentUser);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
+
+  const packItems: { title: string; url: string }[] = loading
+    ? [{ title: "Loading...", url: "#" }]
+    : packs.length === 0
+      ? [{ title: "No packs found", url: "#" }]        
+      : packs.map((pack) => ({
+          title: pack.name,
+          url: `/dashboard/packs/${pack.id}`,
+        }));
 
   const navMainItems = [
     {
       title: "Packs",
       url: "#",
       icon: <PackageSearch />,
-      items: loading
-        ? [{ title: "Loading...", url: "#" }]
-        : packs.length === 0
-          ? [{ title: "No packs found", url: "#" }]
-          : packs.map((pack) => ({
-            title: pack.name,
-            url: `/dashboard/packs/${pack.id}`,
-            description: pack.description,
-          })),
+      items: packItems,
     },
   ];
 
@@ -125,7 +90,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user ?? { name: "Guest", email: "", avatar: "" }} />      </SidebarFooter>
+        <NavUser user={user ?? { name: "Guest", email: "", avatar: "" }} />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
